@@ -5,7 +5,7 @@ import { saveOrder } from "@/lib/db";
 
 export async function POST(req: Request) {
   const buf = Buffer.from(await req.arrayBuffer());
-  const sig = (req.headers as any).get("stripe-signature");
+  const sig = req.headers.get("stripe-signature");
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
   let event: Stripe.Event;
@@ -17,15 +17,29 @@ export async function POST(req: Request) {
 
   if (event.type === "checkout.session.completed") {
     const s = event.data.object as Stripe.Checkout.Session;
+
+    // Line items for the session
     const items = await stripe.checkout.sessions.listLineItems(s.id, { limit: 100 });
+
+    // Use customer_details (name, email, address) instead of shipping_details
+    const shipping = s.customer_details
+      ? {
+          name: s.customer_details.name || undefined,
+          email: s.customer_details.email || undefined,
+          address: s.customer_details.address || undefined,
+        }
+      : undefined;
 
     const order = await saveOrder({
       sessionId: s.id,
-      email: s.customer_email!,
+      email: s.customer_details?.email!,
       amountTotal: s.amount_total!,
       currency: s.currency!,
-      shipping: s.shipping_details,
-      lineItems: items.data.map((i) => ({ name: i.description, qty: i.quantity })),
+      shipping,
+      lineItems: items.data.map((i) => ({
+        name: i.description ?? "Item",
+        qty: i.quantity ?? 1,
+      })),
       status: "paid",
     });
 
@@ -34,4 +48,3 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ received: true });
 }
-
