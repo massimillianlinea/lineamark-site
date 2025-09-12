@@ -18,10 +18,10 @@ export async function POST(req: Request) {
   if (event.type === "checkout.session.completed") {
     const s = event.data.object as Stripe.Checkout.Session;
 
-    // Line items for the session
+    // Fetch line items for the session
     const items = await stripe.checkout.sessions.listLineItems(s.id, { limit: 100 });
 
-    // Use customer_details (name, email, address) instead of shipping_details
+    // Use customer_details (available on Checkout.Session)
     const shipping = s.customer_details
       ? {
           name: s.customer_details.name || undefined,
