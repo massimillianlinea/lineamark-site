@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import {
   Check,
   Sparkles,
@@ -141,7 +141,7 @@ export default function LineaMarkLanding() {
       {/* Hero */}
       <section id="home" className="relative overflow-hidden py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-10 items-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <span className="inline-flex items-center gap-2 text-rose-700 bg-rose-100 px-3 py-1 rounded-full text-xs font-medium">
               <Sparkles className="w-3 h-3" /> New
             </span>
@@ -161,7 +161,7 @@ export default function LineaMarkLanding() {
               </a>
             </div>
             <p className="mt-3 text-xs text-neutral-500">For educational use only. Remove before procedures.</p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -171,11 +171,11 @@ export default function LineaMarkLanding() {
           <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Why LineaMark</h2>
           <div className="mt-8 grid sm:grid-cols-2 md:grid-cols-3 gap-6">
             {features.map((f, idx) => (
-              <motion.div key={idx} className="p-6 rounded-3xl border border-neutral-200 shadow-sm bg-white">
+              <m.div key={idx} className="p-6 rounded-3xl border border-neutral-200 shadow-sm bg-white">
                 <div className="h-10 w-10 rounded-xl bg-rose-100 text-rose-700 grid place-items-center mb-4">{f.icon}</div>
                 <h3 className="font-medium">{f.title}</h3>
                 <p className="mt-2 text-sm text-neutral-600">{f.desc}</p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
